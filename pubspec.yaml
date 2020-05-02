@@ -22,3 +22,8 @@ flutter:
   assets:
     - assets/images/
     - assets/images/logos_terceros/
+    
+  fonts:
+    - family: Montserrat
+      fonts:
+          - asset: fonts/Montserrat-Regular.ttf
