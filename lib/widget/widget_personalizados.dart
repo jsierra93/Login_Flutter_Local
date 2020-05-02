@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class BotonRedesSociales extends StatelessWidget {
   String texto;
   String icono;
   String colorHex;
 
-  BotonRedesSociales({@required this.texto, @required this.icono, @required this.colorHex});
+  BotonRedesSociales(
+      {@required this.texto, @required this.icono, @required this.colorHex});
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +34,23 @@ class BotonRedesSociales extends StatelessWidget {
         color: convertColorHex(colorHex), //Color(0xff0091ea),
         textColor: Colors.white,
         splashColor: Colors.black45,
-        onPressed: () {});
-  }
+        onPressed: () {
+          ProgressDialog pr =
+              new ProgressDialog(context, type: ProgressDialogType.Normal);
+          pr.style(
+            message: 'Ingresando via ' + texto,
+          );
+          pr.show();
 
+        });
+  }
 }
 
 Color convertColorHex(String color) {
-            color = color.replaceAll("#", "");
-            if (color.length == 6) {
-              return Color(int.parse("0xFF"+color));
-            } else if (color.length == 8) {
-              return Color(int.parse("0x"+color));
-            }
-          }
+  color = color.replaceAll("#", "");
+  if (color.length == 6) {
+    return Color(int.parse("0xFF" + color));
+  } else if (color.length == 8) {
+    return Color(int.parse("0x" + color));
+  }
+}

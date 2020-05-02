@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:login_flutter_local/pages/home_page.dart';
+import 'package:login_flutter_local/providers/login_provider.dart';
 import 'package:login_flutter_local/widget/widget_personalizados.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   final bool isLogin = false;
@@ -9,34 +12,44 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          width: double.infinity,
-          child: Column(
-            children: <Widget>[
-              _titleContainer(),
-              _formContainer(),
-              _buttonContainer(),
-             _creditContainer()
-            ],
-          )),
+      body: SingleChildScrollView(
+        child: Container(
+            width: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _titleContainer(),
+                _formContainer(),
+                _buttonContainer(),
+                _creditContainer()
+              ],
+            )),
+      ),
     );
   }
 
   Widget _titleContainer() {
+    final double heightDevices = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: Container(
-      height: (MediaQuery.of(context).size.height / 4)*1.2,
+          height: (heightDevices / 4) * 1.2,
           width: double.infinity,
           color: Colors.white,
           child: Column(
             children: <Widget>[
               Spacer(),
-              Image.asset(
-                'assets/images/Logo_Demo.png',
-                height: 200,
+              SizedBox(
+                height: heightDevices / 4,
+                child: Image.asset(
+                  "assets/images/Logo_Demo.png",
+                  fit: BoxFit.contain,
+                ),
               ),
               Text(
                 'Bienvenido',
@@ -53,51 +66,69 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _formContainer() {
-    return SingleChildScrollView(
-      child: Container(
-          color: Colors.white,
-      height: (MediaQuery.of(context).size.height / 4)*1.2,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 25, right: 25),
-            child: Column(
-              children: <Widget>[
-                Spacer(),
-                TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'email', icon: Icon(Icons.email))),
-                Spacer(),
-                TextFormField(
-                    decoration: InputDecoration(
-                        labelText: 'contraseña', icon: Icon(Icons.lock))),
-                Spacer(),
-                Container(
-                  width: double.infinity,
-                  height: 60,
-                  child: RaisedButton(
-                      shape: StadiumBorder(),
-                      elevation: 4,
-                      child: Text('Ingresar',
-                          style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold)),
-                      padding: EdgeInsets.all(15),
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      splashColor: Colors.black45,
-                      onPressed: () {
-                        
-                      }),
-                ),
-              ],
-            ),
-          )),
-    );
+    var loginProvider = Provider.of<LoginProvider>(context);
+    var hidePass = true;
+
+    return Container(
+        padding: EdgeInsets.all(15.0),
+        color: Colors.white,
+        height: (MediaQuery.of(context).size.height / 4) * 1.2,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              Spacer(),
+              TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  onSaved: (value) => loginProvider.user = value,
+                  decoration: InputDecoration(
+                      labelText: 'email', icon: Icon(Icons.email))),
+              Spacer(),
+              TextFormField(
+                  onSaved: (value) => loginProvider.pass = value,
+                  obscureText: hidePass,
+                  decoration: InputDecoration(
+                    labelText: 'contraseña',
+                    icon: Icon(Icons.lock),
+                  )),
+              Spacer(),
+              Container(
+                width: double.infinity,
+                height: 60,
+                child: RaisedButton(
+                    shape: StadiumBorder(),
+                    elevation: 4,
+                    child: Text('Ingresar',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold)),
+                    padding: EdgeInsets.all(15),
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    splashColor: Colors.black45,
+                    onPressed: () {
+                      final form = _formKey.currentState;
+                      form.save();
+                      form.reset();
+                      print(loginProvider.user + ' -- ' + loginProvider.pass);
+                      loginProvider.isLogin = true;
+                      FocusScope.of(context)
+                          .requestFocus(FocusNode()); // para ocultar el teclado
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return (HomePage());
+                      }));
+                    }),
+              ),
+            ],
+          ),
+        ));
   }
 
   Widget _buttonContainer() {
     return SingleChildScrollView(
-          child: Container(
+      child: Container(
         width: double.infinity,
-        height: (MediaQuery.of(context).size.height / 4)*1.2,
+        height: (MediaQuery.of(context).size.height / 4) * 1.2,
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(15),
@@ -131,9 +162,9 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _creditContainer() {
     return SingleChildScrollView(
-          child: Container(
+      child: Container(
         padding: EdgeInsets.symmetric(vertical: 25),
-        height: (MediaQuery.of(context).size.height / 4)*0.4,
+        height: (MediaQuery.of(context).size.height / 4) * 0.4,
         width: double.infinity,
         color: Colors.white,
         child: Text(
