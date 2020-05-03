@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:progress_dialog/progress_dialog.dart';
+//import 'package:progress_dialog/progress_dialog.dart';
 
 class BotonRedesSociales extends StatelessWidget {
   String texto;
@@ -35,13 +35,7 @@ class BotonRedesSociales extends StatelessWidget {
         textColor: Colors.white,
         splashColor: Colors.black45,
         onPressed: () {
-          ProgressDialog pr =
-              new ProgressDialog(context, type: ProgressDialogType.Normal);
-          pr.style(
-            message: 'Ingresando via ' + texto,
-          );
-          pr.show();
-
+          
         });
   }
 }
@@ -54,3 +48,12 @@ Color convertColorHex(String color) {
     return Color(int.parse("0x" + color));
   }
 }
+
+/*
+ProgressDialog pr =
+              new ProgressDialog(context, type: ProgressDialogType.Normal);
+          pr.style(
+            message: 'Ingresando via ' + texto,
+          );
+          pr.show();
+*/

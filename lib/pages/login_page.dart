@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_flutter_local/pages/home_page.dart';
 import 'package:login_flutter_local/providers/login_provider.dart';
+import 'package:login_flutter_local/services/user_db.dart';
 import 'package:login_flutter_local/widget/widget_personalizados.dart';
 import 'package:provider/provider.dart';
 
@@ -55,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                 'Bienvenido',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 30,
                     color: Colors.black,
                     decoration: TextDecoration.none,
                     fontWeight: FontWeight.w800),
@@ -81,12 +82,14 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   onSaved: (value) => loginProvider.user = value,
+                  style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                       labelText: 'email', icon: Icon(Icons.email))),
               Spacer(),
               TextFormField(
                   onSaved: (value) => loginProvider.pass = value,
                   obscureText: hidePass,
+                  style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                     labelText: 'contraseña',
                     icon: Icon(Icons.lock),
@@ -106,6 +109,22 @@ class _LoginPageState extends State<LoginPage> {
                     textColor: Colors.white,
                     splashColor: Colors.black45,
                     onPressed: () {
+                      print('find User');
+
+                      UserDb.db.buscarUsuario();
+
+                      print('All Users');
+                      UserDb.db.getUsers().then(
+                        (userList) {
+                          userList.forEach((user) {
+                            print(user.toString());
+                          });
+                        },
+                      );
+                      /* UserDb.db.deleteUser('jsierra93@hotmail.com').then((val) {
+                        print(val);
+                      });*/
+
                       final form = _formKey.currentState;
                       form.save();
                       form.reset();

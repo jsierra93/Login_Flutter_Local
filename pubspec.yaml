@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   sqflite:
+  path_provider:
   path:
   provider:
   progress_dialog: ^1.1.0+1
