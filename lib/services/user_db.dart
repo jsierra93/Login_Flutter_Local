@@ -45,15 +45,28 @@ class UserDb {
     );
   }
 
-// implementar var res =await  db.query("Client", where: "id = ?", whereArgs: [id]);
-  Future<User> getUser(User user) async {
-    print("getting users");
-    String email = user.profile;
+
+// Funcionando User.db.autenticar(email
+  Future<User> authenticator(String email, String pass) async {
     final db = await database;
-    var userQuery = await db.query(TABLE,
-        columns: [COLUMN_EMAIL, COLUMN_PASS, COLUMN_PROFILE],
-        where: '$COLUMN_PROFILE = $email');
-    return User.fromMap(userQuery.first);
+   var userQuery =await  db.query(TABLE, where: "email = ? and pass= ?", whereArgs: [email, pass]);
+   if (userQuery.isEmpty){
+      return null;
+   }else{
+     return User.fromMap(userQuery.first);
+   }
+  }
+
+// Funcionando User.db.getUserByEmail(email
+  Future<User> getUserByEmail(String email) async {
+    print("getting users");
+    final db = await database;
+   var userQuery =await  db.query(TABLE, where: "email = ?", whereArgs: [email]);
+   if (userQuery.isEmpty){
+      return null;
+   }else{
+     return User.fromMap(userQuery.first);
+   }
   }
 
 //Funcionando User.db.getUsers()
@@ -108,10 +121,8 @@ class UserDb {
   }
 
   Future<void> buscarUsuario() async {
-    User user =
-        User(email: 'jsierra93@hotmail.com', profile: 'admin', pass: '1234');
-    getUser(user).then((onValue){
-      print(onValue.email);
+    getUserByEmail('jsierra93@hotmail.com').then((onValue){
+      print(onValue);
     });
   }
 }

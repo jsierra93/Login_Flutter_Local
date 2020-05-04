@@ -69,7 +69,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget _formContainer() {
     var loginProvider = Provider.of<LoginProvider>(context);
     var hidePass = true;
-
+    var _email;
+    var _pass;
     return Container(
         padding: EdgeInsets.all(15.0),
         color: Colors.white,
@@ -81,13 +82,19 @@ class _LoginPageState extends State<LoginPage> {
               Spacer(),
               TextFormField(
                   keyboardType: TextInputType.emailAddress,
-                  onSaved: (value) => loginProvider.user = value,
+                  onSaved: (value) {
+                    loginProvider.user = value;
+                    _email = value;
+                  },
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                       labelText: 'email', icon: Icon(Icons.email))),
               Spacer(),
               TextFormField(
-                  onSaved: (value) => loginProvider.pass = value,
+                  onSaved: (value) {
+                    loginProvider.pass = value;
+                    _pass = value;
+                  },
                   obscureText: hidePass,
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
@@ -109,10 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                     textColor: Colors.white,
                     splashColor: Colors.black45,
                     onPressed: () {
-                      print('find User');
-
-                      UserDb.db.buscarUsuario();
-
+                      /* 
                       print('All Users');
                       UserDb.db.getUsers().then(
                         (userList) {
@@ -121,21 +125,28 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                       );
-                      /* UserDb.db.deleteUser('jsierra93@hotmail.com').then((val) {
+                     UserDb.db.deleteUser('jsierra93@hotmail.com').then((val) {
                         print(val);
                       });*/
 
                       final form = _formKey.currentState;
                       form.save();
                       form.reset();
+
+                      print('find User');
+                      UserDb.db.getUserByEmail(_email).then((onValue) {
+                        if (onValue != null) {
+                          FocusScope.of(context).requestFocus(
+                              FocusNode()); // para ocultar el teclado
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return (HomePage());
+                          }));
+                        }
+                        print(onValue);
+                      });
                       print(loginProvider.user + ' -- ' + loginProvider.pass);
                       loginProvider.isLogin = true;
-                      FocusScope.of(context)
-                          .requestFocus(FocusNode()); // para ocultar el teclado
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return (HomePage());
-                      }));
                     }),
               ),
             ],
