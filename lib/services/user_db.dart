@@ -47,13 +47,13 @@ class UserDb {
 
 
 // Funcionando User.db.autenticar(email
-  Future<User> authenticator(String email, String pass) async {
+  Future<bool> authenticator(String email, String pass) async {
     final db = await database;
    var userQuery =await  db.query(TABLE, where: "email = ? and pass= ?", whereArgs: [email, pass]);
    if (userQuery.isEmpty){
-      return null;
+      return false;
    }else{
-     return User.fromMap(userQuery.first);
+     return true;
    }
   }
 

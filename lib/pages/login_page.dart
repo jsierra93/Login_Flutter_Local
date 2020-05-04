@@ -134,8 +134,8 @@ class _LoginPageState extends State<LoginPage> {
                       form.reset();
 
                       print('find User');
-                      UserDb.db.getUserByEmail(_email).then((onValue) {
-                        if (onValue != null) {
+                      UserDb.db.authenticator(_email, _pass).then((onValue) {
+                        if (onValue) {
                           FocusScope.of(context).requestFocus(
                               FocusNode()); // para ocultar el teclado
                           Navigator.push(context,
