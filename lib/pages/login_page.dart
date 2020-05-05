@@ -142,10 +142,10 @@ class _LoginPageState extends State<LoginPage> {
                               MaterialPageRoute(builder: (context) {
                             return (HomePage());
                           }));
+                        }else{
+                          _dialogErrorAutent();
                         }
-                        print(onValue);
                       });
-                      print(loginProvider.user + ' -- ' + loginProvider.pass);
                       loginProvider.isLogin = true;
                     }),
               ),
@@ -207,6 +207,34 @@ class _LoginPageState extends State<LoginPage> {
               decoration: TextDecoration.none),
         ),
       ),
+    );
+  }
+
+  Future<void> _dialogErrorAutent() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(child: Text('Autenticación')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Email o Contraseña incorrecta.'),
+                Text('Por favor intente nuevamente'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Cerrar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
