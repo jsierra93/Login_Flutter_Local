@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_flutter_local/model/User.dart';
 import 'package:login_flutter_local/pages/home_page.dart';
 import 'package:login_flutter_local/providers/login_provider.dart';
 import 'package:login_flutter_local/services/user_db.dart';
@@ -56,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                 'Bienvenido',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 25,
                     color: Colors.black,
                     decoration: TextDecoration.none,
                     fontWeight: FontWeight.w800),
@@ -69,12 +70,12 @@ class _LoginPageState extends State<LoginPage> {
   Widget _formContainer() {
     var loginProvider = Provider.of<LoginProvider>(context);
     var hidePass = true;
-    var _email;
-    var _pass;
+    String email;
+    String pass;
     return Container(
         padding: EdgeInsets.all(15.0),
         color: Colors.white,
-        height: (MediaQuery.of(context).size.height / 4) * 1.2,
+        height: (MediaQuery.of(context).size.height / 4) * 1.5,
         child: Form(
           key: _formKey,
           child: Column(
@@ -83,8 +84,8 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   onSaved: (value) {
-                    loginProvider.user = value;
-                    _email = value;
+                    email = value;
+                    loginProvider.email = value;
                   },
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
@@ -92,8 +93,8 @@ class _LoginPageState extends State<LoginPage> {
               Spacer(),
               TextFormField(
                   onSaved: (value) {
+                    pass = value;
                     loginProvider.pass = value;
-                    _pass = value;
                   },
                   obscureText: hidePass,
                   style: TextStyle(fontSize: 20),
@@ -101,34 +102,93 @@ class _LoginPageState extends State<LoginPage> {
                     labelText: 'contraseña',
                     icon: Icon(Icons.lock),
                   )),
-              Spacer(),
-              Container(
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 50),
+                child: Row(
+                  children: <Widget>[
+                    RaisedButton(
+                        shape: StadiumBorder(),
+                        elevation: 4,
+                        child: Text('Registrarme',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                        padding: EdgeInsets.all(15),
+                        color: Colors.blue,
+                        textColor: Colors.white,
+                        splashColor: Colors.black45,
+                        onPressed: () {
+                          final form = _formKey.currentState;
+                          form.save();
+                          form.reset();
+                          UserDb.db
+                              .insertUser(new User(
+                                  email: email, pass: pass, profile: 'admin'))
+                              .then((cantRegistro) {
+                                print('registrado : $cantRegistro');
+                            if (cantRegistro) {
+                              loginProvider.isLogin = true;
+                              FocusScope.of(context).requestFocus(
+                                  FocusNode()); // para ocultar el teclado
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return (HomePage());
+                              }));
+                            } else {
+                              _dialogErrorAutent();
+                            }
+                          });
+                        }),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    RaisedButton(
+                        shape: StadiumBorder(),
+                        elevation: 4,
+                        child: Text(' Ingresar ',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold)),
+                        padding: EdgeInsets.all(15),
+                        color: Colors.blue,
+                        textColor: Colors.white,
+                        splashColor: Colors.black45,
+                        onPressed: () {
+                          final form = _formKey.currentState;
+                          form.save();
+                          form.reset();
+                          UserDb.db.authenticator(email, pass).then((isLogin) {
+                            if (isLogin) {
+                              loginProvider.isLogin = true;
+                              FocusScope.of(context).requestFocus(
+                                  FocusNode()); // para ocultar el teclado
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return (HomePage());
+                              }));
+                            } else {
+                              _dialogErrorAutent();
+                            }
+                          });
+                        }),
+                  ],
+                ),
+              ),
+              /*Container(
                 width: double.infinity,
-                height: 60,
+                height: 50,
                 child: RaisedButton(
                     shape: StadiumBorder(),
                     elevation: 4,
                     child: Text('Ingresar',
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold)),
-                    padding: EdgeInsets.all(15),
+                    padding: EdgeInsets.all(10),
                     color: Colors.blue,
                     textColor: Colors.white,
                     splashColor: Colors.black45,
                     onPressed: () {
-                      /* 
-                      print('All Users');
-                      UserDb.db.getUsers().then(
-                        (userList) {
-                          userList.forEach((user) {
-                            print(user.toString());
-                          });
-                        },
-                      );
-                     UserDb.db.deleteUser('jsierra93@hotmail.com').then((val) {
-                        print(val);
-                      });*/
-
                       final form = _formKey.currentState;
                       form.save();
                       form.reset();
@@ -142,13 +202,28 @@ class _LoginPageState extends State<LoginPage> {
                               MaterialPageRoute(builder: (context) {
                             return (HomePage());
                           }));
-                        }else{
+                        } else {
                           _dialogErrorAutent();
                         }
                       });
                       loginProvider.isLogin = true;
                     }),
               ),
+              Container(
+                width: double.infinity,
+                height: 30,
+                child: RaisedButton(
+                    shape: StadiumBorder(),
+                    elevation: 4,
+                    child: Text('Registrar',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold)),
+                    padding: EdgeInsets.all(10),
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    splashColor: Colors.black45,
+                    onPressed: () {}),
+              ),*/
             ],
           ),
         ));
@@ -213,7 +288,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _dialogErrorAutent() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Center(child: Text('Autenticación')),

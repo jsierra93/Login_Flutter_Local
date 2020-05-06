@@ -16,7 +16,7 @@ class UserDb {
   Database _database;
 
   Future<Database> get database async {
-    print("database getter called");
+    print("get Database");
 
     if (_database != null) {
       return _database;
@@ -45,28 +45,29 @@ class UserDb {
     );
   }
 
-
 // Funcionando User.db.autenticar(email
   Future<bool> authenticator(String email, String pass) async {
     final db = await database;
-   var userQuery =await  db.query(TABLE, where: "email = ? and pass= ?", whereArgs: [email, pass]);
-   if (userQuery.isEmpty){
+    var userQuery = await db
+        .query(TABLE, where: "email = ? and pass= ?", whereArgs: [email, pass]);
+    if (userQuery.isEmpty) {
       return false;
-   }else{
-     return true;
-   }
+    } else {
+      return true;
+    }
   }
 
 // Funcionando User.db.getUserByEmail(email
   Future<User> getUserByEmail(String email) async {
     print("getting users");
     final db = await database;
-   var userQuery =await  db.query(TABLE, where: "email = ?", whereArgs: [email]);
-   if (userQuery.isEmpty){
+    var userQuery =
+        await db.query(TABLE, where: "email = ?", whereArgs: [email]);
+    if (userQuery.isEmpty) {
       return null;
-   }else{
-     return User.fromMap(userQuery.first);
-   }
+    } else {
+      return User.fromMap(userQuery.first);
+    }
   }
 
 //Funcionando User.db.getUsers()
@@ -84,13 +85,19 @@ class UserDb {
   }
 
 //Funcionando User.db.insertUser(user)
-  Future<int> insertUser(User user) async {
+  Future<bool> insertUser(User user) async {
+    print('Registrando usuario: ' + user.toString());
     final db = await database;
-    return await db.insert(
+    var nRegistros = await db.insert(
       TABLE,
       user.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    if (nRegistros > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 //Funcionando User.db.deleteUser('email')
@@ -121,7 +128,7 @@ class UserDb {
   }
 
   Future<void> buscarUsuario() async {
-    getUserByEmail('jsierra93@hotmail.com').then((onValue){
+    getUserByEmail('jsierra93@hotmail.com').then((onValue) {
       print(onValue);
     });
   }
