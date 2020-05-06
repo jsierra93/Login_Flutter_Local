@@ -5,13 +5,27 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-        var loginProvider = Provider.of<LoginProvider>(context);
+    var loginProvider = Provider.of<LoginProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Home Page'),
+        centerTitle: true,
       ),
-      body: Container(
-        child: Text('Is login: '+loginProvider.isLogin.toString()),
+      body:  Container(
+        child: Row(
+          children: <Widget>[
+            Text('Hola : ' + loginProvider.email.toString()),
+            Spacer(),
+            RaisedButton(
+                child: Text('Cerrar Sesion'),
+                onPressed: () {
+                  loginProvider.isLogin = false;
+                  loginProvider.email = '';
+                  loginProvider.pass = '';
+                  Navigator.of(context).pop();
+                })
+          ],
+        ),
       ),
     );
   }

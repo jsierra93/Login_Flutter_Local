@@ -7,8 +7,6 @@ import 'package:login_flutter_local/widget/widget_personalizados.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-  final bool isLogin = false;
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }

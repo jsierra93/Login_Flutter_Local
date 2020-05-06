@@ -33,17 +33,14 @@ class LoginProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> autenticar() async {
-    UserDb.db.authenticator(_email, _pass).then((onValue) {
+  Future<bool> autenticar() async => UserDb.db.authenticator(_email, _pass).then((onValue) {
       print('autenticar: $onValue');
       isLogin = onValue;
       return onValue;
     });
-  }
 
 
-  Future<bool> registrar() async {
-    UserDb.db.insertUser(new User(email: _email,
+  Future<bool> registrar() async => UserDb.db.insertUser(new User(email: _email,
     pass: _pass,
     profile: 'admin'
      )).then((onValue) {
@@ -54,5 +51,4 @@ class LoginProvider with ChangeNotifier {
         return false;
       }
     });
-  }
 }
