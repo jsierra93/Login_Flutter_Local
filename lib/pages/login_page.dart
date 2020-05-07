@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:login_flutter_local/model/User.dart';
 import 'package:login_flutter_local/pages/home_page.dart';
+import 'package:login_flutter_local/pages/signup_page.dart';
 import 'package:login_flutter_local/providers/login_provider.dart';
 import 'package:login_flutter_local/services/user_db.dart';
+import 'package:login_flutter_local/widget/rounded_button.dart';
 import 'package:login_flutter_local/widget/widget_personalizados.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,6 @@ class _LoginPageState extends State<LoginPage> {
                 _titleContainer(),
                 _formContainer(),
                 _buttonContainer(),
-                _creditContainer()
               ],
             )),
       ),
@@ -68,12 +68,12 @@ class _LoginPageState extends State<LoginPage> {
   Widget _formContainer() {
     var loginProvider = Provider.of<LoginProvider>(context);
     var hidePass = true;
-    String email;
+    String user;
     String pass;
     return Container(
-        padding: EdgeInsets.all(15.0),
+        padding: EdgeInsets.all(20.0),
         color: Colors.white,
-        height: (MediaQuery.of(context).size.height / 4) * 1.5,
+        height: (MediaQuery.of(context).size.height * 0.5),
         child: Form(
           key: _formKey,
           child: Column(
@@ -82,12 +82,12 @@ class _LoginPageState extends State<LoginPage> {
               TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   onSaved: (value) {
-                    email = value;
-                    loginProvider.email = value;
+                    user = value;
+                    loginProvider.user = value;
                   },
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
-                      labelText: 'email', icon: Icon(Icons.email))),
+                      labelText: 'usuario', icon: Icon(Icons.people))),
               Spacer(),
               TextFormField(
                   onSaved: (value) {
@@ -103,125 +103,52 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 50),
-                child: Row(
-                  children: <Widget>[
-                    RaisedButton(
-                        shape: StadiumBorder(),
-                        elevation: 4,
-                        child: Text('Registrarme',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold)),
-                        padding: EdgeInsets.all(15),
-                        color: Colors.blue,
-                        textColor: Colors.white,
-                        splashColor: Colors.black45,
-                        onPressed: () {
-                          final form = _formKey.currentState;
-                          form.save();
-                          form.reset();
-                          UserDb.db
-                              .insertUser(new User(
-                                  email: email, pass: pass, profile: 'admin'))
-                              .then((cantRegistro) {
-                                print('registrado : $cantRegistro');
-                            if (cantRegistro) {
-                              loginProvider.isLogin = true;
-                              FocusScope.of(context).requestFocus(
-                                  FocusNode()); // para ocultar el teclado
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return (HomePage());
-                              }));
-                            } else {
-                              _dialogErrorAutent();
-                            }
-                          });
-                        }),
-                    SizedBox(
-                      width: 30,
-                    ),
-                    RaisedButton(
-                        shape: StadiumBorder(),
-                        elevation: 4,
-                        child: Text(' Ingresar ',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold)),
-                        padding: EdgeInsets.all(15),
-                        color: Colors.blue,
-                        textColor: Colors.white,
-                        splashColor: Colors.black45,
-                        onPressed: () {
-                          final form = _formKey.currentState;
-                          form.save();
-                          form.reset();
-                          UserDb.db.authenticator(email, pass).then((isLogin) {
-                            if (isLogin) {
-                              loginProvider.isLogin = true;
-                              FocusScope.of(context).requestFocus(
-                                  FocusNode()); // para ocultar el teclado
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return (HomePage());
-                              }));
-                            } else {
-                              _dialogErrorAutent();
-                            }
-                          });
-                        }),
-                  ],
-                ),
-              ),
-              /*Container(
-                width: double.infinity,
-                height: 50,
-                child: RaisedButton(
-                    shape: StadiumBorder(),
-                    elevation: 4,
-                    child: Text('Ingresar',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold)),
-                    padding: EdgeInsets.all(10),
+              Column(
+                children: <Widget>[
+                  RoundedButton(
                     color: Colors.blue,
-                    textColor: Colors.white,
-                    splashColor: Colors.black45,
-                    onPressed: () {
+                    text: "Ingresar",
+                    press: () {
                       final form = _formKey.currentState;
                       form.save();
                       form.reset();
-
-                      print('find User');
-                      UserDb.db.authenticator(_email, _pass).then((onValue) {
-                        if (onValue) {
-                          FocusScope.of(context).requestFocus(
-                              FocusNode()); // para ocultar el teclado
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return (HomePage());
-                          }));
-                        } else {
-                          _dialogErrorAutent();
-                        }
-                      });
-                      loginProvider.isLogin = true;
-                    }),
-              ),
-              Container(
-                width: double.infinity,
-                height: 30,
-                child: RaisedButton(
-                    shape: StadiumBorder(),
-                    elevation: 4,
-                    child: Text('Registrar',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold)),
-                    padding: EdgeInsets.all(10),
+                      if (user.isNotEmpty && pass.isNotEmpty) {
+                        UserDb.db.authenticator(user, pass).then((isLogin) {
+                          if (isLogin) {
+                            loginProvider.isLogin = true;
+                            FocusScope.of(context).requestFocus(
+                                FocusNode()); // para ocultar el teclado
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return (HomePage());
+                            }));
+                          } else {
+                            _dialogErrorAutent();
+                          }
+                        });
+                      } else {
+                        _dialogErrorAutent();
+                      }
+                    },
+                  ),
+                  RoundedButton(
                     color: Colors.blue,
-                    textColor: Colors.white,
-                    splashColor: Colors.black45,
-                    onPressed: () {}),
-              ),*/
+                    text: "Registrar",
+                    press: () {
+                      final form = _formKey.currentState;
+                      form.save();
+                      form.reset();
+                      FocusScope.of(context)
+                          .requestFocus(FocusNode()); // para ocultar el teclado
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return (SignupPage());
+                      }));
+                    },
+                  )
+                ],
+              ),
+              
             ],
           ),
         ));
@@ -258,26 +185,6 @@ class _LoginPageState extends State<LoginPage> {
               Spacer(),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _creditContainer() {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 25),
-        height: (MediaQuery.of(context).size.height / 4) * 0.4,
-        width: double.infinity,
-        color: Colors.white,
-        child: Text(
-          'Jsierra93 ',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 20,
-              color: Colors.blue,
-              fontWeight: FontWeight.bold,
-              decoration: TextDecoration.none),
         ),
       ),
     );

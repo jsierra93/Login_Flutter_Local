@@ -5,6 +5,7 @@ import 'package:sqflite/sqflite.dart';
 
 class UserDb {
   static const String TABLE = 'users';
+    static const String COLUMN_USER = 'user';
   static const String COLUMN_EMAIL = 'email';
   static const String COLUMN_PASS = 'pass';
   static const String COLUMN_PROFILE = 'profile';
@@ -28,6 +29,7 @@ class UserDb {
   }
 
   Future<Database> createDatabase() async {
+    print('Create Database');
     String dbPath = await getDatabasesPath();
     return await openDatabase(
       join(dbPath, 'userDB.db'),
@@ -36,7 +38,8 @@ class UserDb {
         print("Creating user table");
         await database.execute(
           "CREATE TABLE $TABLE ("
-          "$COLUMN_EMAIL TEXT PRIMARY KEY,"
+          "$COLUMN_USER TEXT PRIMARY KEY,"
+          "$COLUMN_EMAIL KEY,"
           "$COLUMN_PASS TEXT,"
           "$COLUMN_PROFILE TEXT"
           ")",
@@ -46,10 +49,10 @@ class UserDb {
   }
 
 // Funcionando User.db.autenticar(email
-  Future<bool> authenticator(String email, String pass) async {
+  Future<bool> authenticator(String user, String pass) async {
     final db = await database;
     var userQuery = await db
-        .query(TABLE, where: "email = ? and pass= ?", whereArgs: [email, pass]);
+        .query(TABLE, where: "user = ? and pass= ?", whereArgs: [user,  pass]);
     if (userQuery.isEmpty) {
       return false;
     } else {
@@ -59,7 +62,7 @@ class UserDb {
 
 // Funcionando User.db.getUserByEmail(email
   Future<User> getUserByEmail(String email) async {
-    print("getting users");
+    print("getting user");
     final db = await database;
     var userQuery =
         await db.query(TABLE, where: "email = ?", whereArgs: [email]);
@@ -75,7 +78,7 @@ class UserDb {
     print("getting users");
     final db = await database;
     var users = await db
-        .query(TABLE, columns: [COLUMN_EMAIL, COLUMN_PASS, COLUMN_PROFILE]);
+        .query(TABLE, columns: [COLUMN_USER, COLUMN_EMAIL, COLUMN_PASS, COLUMN_PROFILE]);
     List<User> usersList = List<User>();
     users.forEach((currentUser) {
       User user = User.fromMap(currentUser);
@@ -123,7 +126,7 @@ class UserDb {
 
   Future<void> grabarUsuario() async {
     User user =
-        User(email: 'jsierra93@hotmail.com', profile: 'admin', pass: '1234');
+        User(user: 'admin', email: 'jsierra93@hotmail.com', profile: 'admin', pass: '1234');
     insertUser(user);
   }
 
