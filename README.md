@@ -1,12 +1,24 @@
-# login_flutter_local
+# Sqlite flutter
 
-A new Flutter project.
+ App login y registro de usuarios en BD local (Sqlite)
 
-## Getting Started
+## Fuentes oficiales
 
-This project is a starting point for a Flutter application.
+https://flutter-es.io/docs/get-started/install
 
-A few resources to get you started if this is your first Flutter project:
+https://flutter.dev/
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### Screenshot
+<br>
+<img  width="800"
+     height="800" src='assets/images/Screenshot/Login_Page.png'>
+</br>
+<br>
+<img  width="800"
+     height="400"src='assets/images/Screenshot/Registrar_Page.png'>
+</br>
+<br>
+<img  width="800"
+     height="400"src='assets/images/Screenshot/Home_Page.png'>
+</br>
+  https://github.com/jsierra93
