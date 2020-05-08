@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:login_flutter_local/model/User.dart';
+import 'package:SqliteFlutter/model/User.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

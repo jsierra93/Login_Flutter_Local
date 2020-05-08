@@ -1,10 +1,11 @@
+import 'package:SqliteFlutter/widget/dialog_popup.dart';
 import 'package:flutter/material.dart';
-import 'package:login_flutter_local/pages/home_page.dart';
-import 'package:login_flutter_local/pages/signup_page.dart';
-import 'package:login_flutter_local/providers/login_provider.dart';
-import 'package:login_flutter_local/services/user_db.dart';
-import 'package:login_flutter_local/widget/rounded_button.dart';
-import 'package:login_flutter_local/widget/widget_personalizados.dart';
+import 'package:SqliteFlutter/pages/home_page.dart';
+import 'package:SqliteFlutter/pages/signup_page.dart';
+import 'package:SqliteFlutter/providers/login_provider.dart';
+import 'package:SqliteFlutter/services/user_db.dart';
+import 'package:SqliteFlutter/widget/rounded_button.dart';
+import 'package:SqliteFlutter/widget/widget_personalizados.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -36,33 +37,30 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _titleContainer() {
     final double heightDevices = MediaQuery.of(context).size.height;
-    return SingleChildScrollView(
-      child: Container(
-          height: (heightDevices / 4) * 1.2,
-          width: double.infinity,
-          color: Colors.white,
-          child: Column(
-            children: <Widget>[
-              Spacer(),
-              SizedBox(
-                height: heightDevices / 4,
-                child: Image.asset(
-                  "assets/images/Logo_Demo.png",
-                  fit: BoxFit.contain,
-                ),
+    return Container(
+        height: heightDevices * 0.4,
+        width: double.infinity,
+        color: Colors.white,
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: heightDevices * 0.35,
+              child: Image.asset(
+                "assets/images/Logo_Demo.png",
+                fit: BoxFit.contain,
               ),
-              Text(
-                'Bienvenido',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.black,
-                    decoration: TextDecoration.none,
-                    fontWeight: FontWeight.w800),
-              ),
-            ],
-          )),
-    );
+            ),
+            Text(
+              'Bienvenido',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 25,
+                  color: Colors.black,
+                  decoration: TextDecoration.none,
+                  fontWeight: FontWeight.w800),
+            ),
+          ],
+        ));
   }
 
   Widget _formContainer() {
@@ -73,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
         padding: EdgeInsets.all(20.0),
         color: Colors.white,
-        height: (MediaQuery.of(context).size.height * 0.5),
+        height: (MediaQuery.of(context).size.height * 0.4),
         child: Form(
           key: _formKey,
           child: Column(
@@ -123,11 +121,23 @@ class _LoginPageState extends State<LoginPage> {
                               return (HomePage());
                             }));
                           } else {
-                            _dialogErrorAutent();
+                            DialogPopup(
+                                titulo: 'Autenticación',
+                                texto:
+                                    'Usuario/Contraseña incorrecta. \n Intente nuevamente.',
+                                press: () {
+                                  Navigator.of(context).pop();
+                                }).showDialogPopup(context);
                           }
                         });
                       } else {
-                        _dialogErrorAutent();
+                        DialogPopup(
+                            titulo: 'Autenticación',
+                            texto:
+                                'Debe ingresar usuario y contraseña. \n Intente nuevamente.',
+                            press: () {
+                              Navigator.of(context).pop();
+                            }).showDialogPopup(context);
                       }
                     },
                   ),
@@ -148,7 +158,6 @@ class _LoginPageState extends State<LoginPage> {
                   )
                 ],
               ),
-              
             ],
           ),
         ));
@@ -158,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
     return SingleChildScrollView(
       child: Container(
         width: double.infinity,
-        height: (MediaQuery.of(context).size.height / 4) * 1.2,
+        height: MediaQuery.of(context).size.height * 0.2,
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.all(15),
@@ -190,31 +199,4 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Future<void> _dialogErrorAutent() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Center(child: Text('Autenticación')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Email o Contraseña incorrecta.'),
-                Text('Por favor intente nuevamente'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Cerrar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 }

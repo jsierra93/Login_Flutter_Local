@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:login_flutter_local/model/User.dart';
-import 'package:login_flutter_local/services/user_db.dart';
+import 'package:SqliteFlutter/services/user_db.dart';
 
 class LoginProvider with ChangeNotifier {
   String _email;
@@ -39,16 +38,4 @@ class LoginProvider with ChangeNotifier {
       return onValue;
     });
 
-
-  Future<bool> registrar() async => UserDb.db.insertUser(new User(email: _email,
-    pass: _pass,
-    profile: 'admin'
-     )).then((onValue) {
-      print('regitrados: $onValue');
-      if (onValue == 1){
-        return true;
-      }else{
-        return false;
-      }
-    });
 }

@@ -1,9 +1,10 @@
+import 'package:SqliteFlutter/widget/dialog_popup.dart';
 import 'package:flutter/material.dart';
-import 'package:login_flutter_local/model/User.dart';
-import 'package:login_flutter_local/pages/home_page.dart';
-import 'package:login_flutter_local/providers/login_provider.dart';
-import 'package:login_flutter_local/services/user_db.dart';
-import 'package:login_flutter_local/widget/rounded_button.dart';
+import 'package:SqliteFlutter/model/User.dart';
+import 'package:SqliteFlutter/pages/home_page.dart';
+import 'package:SqliteFlutter/providers/login_provider.dart';
+import 'package:SqliteFlutter/services/user_db.dart';
+import 'package:SqliteFlutter/widget/rounded_button.dart';
 import 'package:provider/provider.dart';
 
 class SignupPage extends StatefulWidget {
@@ -146,11 +147,23 @@ class _SignupPageState extends State<SignupPage> {
                             return (HomePage());
                           }));
                         } else {
-                          _dialogErrorAutent();
+                          DialogPopup(
+                              titulo: 'Registrarme',
+                              texto:
+                                  'No fue posible crear nuevo usuario. \n Intente nuevamente.',
+                              press: () {
+                                Navigator.of(context).pop();
+                              }).showDialogPopup(context);
                         }
                       });
                     } else {
-                      _dialogErrorAutent();
+                      DialogPopup(
+                          titulo: 'Registrarme',
+                          texto:
+                              'Debe ingresar usuario, email y contraseña. \n Intente nuevamente.',
+                          press: () {
+                            Navigator.of(context).pop();
+                          }).showDialogPopup(context);
                       focusUser = true;
                     }
                   },
@@ -167,34 +180,6 @@ class _SignupPageState extends State<SignupPage> {
           ],
         ),
       ),
-    );
-  }
-
-  Future<void> _dialogErrorAutent() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Center(child: Text('Registro')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('No fue posible crear nuevo usuario.'),
-                Text('Por favor intente nuevamente'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Cerrar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }

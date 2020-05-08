@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_flutter_local/providers/login_provider.dart';
+import 'package:SqliteFlutter/providers/login_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/login_page.dart';

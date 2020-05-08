@@ -1,4 +1,4 @@
-import 'package:login_flutter_local/services/user_db.dart';
+import 'package:SqliteFlutter/services/user_db.dart';
 
 class User {
   String user;

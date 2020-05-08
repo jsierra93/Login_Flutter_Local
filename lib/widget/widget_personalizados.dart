@@ -1,5 +1,5 @@
+import 'package:SqliteFlutter/widget/dialog_popup.dart';
 import 'package:flutter/material.dart';
-//import 'package:progress_dialog/progress_dialog.dart';
 
 class BotonRedesSociales extends StatelessWidget {
   String texto;
@@ -35,7 +35,9 @@ class BotonRedesSociales extends StatelessWidget {
         textColor: Colors.white,
         splashColor: Colors.black45,
         onPressed: () {
-          
+          DialogPopup(titulo:texto, texto: 'Proximamente autenticacion via $texto', press: (){
+            Navigator.of(context).pop();
+          }).showDialogPopup(context);
         });
   }
 }
@@ -50,6 +52,9 @@ Color convertColorHex(String color) {
 }
 
 /*
+
+import 'package:progress_dialog/progress_dialog.dart';
+
 ProgressDialog pr =
               new ProgressDialog(context, type: ProgressDialogType.Normal);
           pr.style(
