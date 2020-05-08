@@ -9,16 +9,20 @@ https://flutter-es.io/docs/get-started/install
 https://flutter.dev/
 
 ### Screenshot
+
+Login Page
 <br>
-<img  width="800"
+<img  width="400"
      height="800" src='assets/images/Screenshot/Login_Page.png'>
 </br>
+Signup page
 <br>
-<img  width="800"
-     height="400"src='assets/images/Screenshot/Registrar_Page.png'>
+<img  width="400"
+     height="800"src='assets/images/Screenshot/Registrar_Page.png'>
 </br>
+Home Page
 <br>
-<img  width="800"
-     height="400"src='assets/images/Screenshot/Home_Page.png'>
+<img  width="400"
+     height="800"src='assets/images/Screenshot/Home_Page.png'>
 </br>
   https://github.com/jsierra93
